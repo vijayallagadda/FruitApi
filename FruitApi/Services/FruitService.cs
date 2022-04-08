@@ -21,13 +21,14 @@ namespace FruitApi.Services
                 // Consuming Json data from provided url //
                 var fruitInfo = JObject.Parse(await GetInfo($"{Constant.FruitInfoUrl}?name={fruit}"));
                 var fruitNutritionData = JObject.Parse(await GetInfo($"{Constant.FruitNutritionsUrl}?type={fruit}"));
-                return new
+                return new FruitInfo
                 {
                     // The Input Json is mapped as single confined record for Fruit info and its nutrition.
                     // Here the driving factor is the Name field.
                     // For different family and genus of fruit and nutrition values, we need to have overlap fields in 
                     // nutrition Json so that we can map the results with fruit info and nutrition.
-                    // If so then the below code need to be expanded to consume list of objects.
+                    // If so then the below code need to be expanded to consume list of objects.                
+                    
                     Name = new FruitName
                     {
                         Name = fruitInfo.SelectToken("name").ToString()
