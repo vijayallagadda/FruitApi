@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
 using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using FruitApi.Services.Tools;
+using System.Collections.Generic;
 
 namespace FruitApiTest
 {
@@ -14,23 +18,21 @@ namespace FruitApiTest
         public async Task SuccessfullyGetFruit(string fruit)
         {
             var sut = new FruitService();
+            var result = await sut.GetFruitAsync(fruit);
+            result.ToString().ShouldNotStartWith("StatusCode");         
 
-            var result = await sut.GetFruitAsync("apple");
-
-            result.ShouldNotBeNull();
         }
 
         [Theory]
         [InlineData("apples")]
         [InlineData("pears")]
+        [InlineData("xyz")]
+        [InlineData("")]
         public async Task FailToGetFruit(string fruit)
         {
             var sut = new FruitService();
-
-            await Should.ThrowAsync<Exception>(async () =>
-            {
-                _ = await sut.GetFruitAsync(fruit);
-            });
+            var result = await sut.GetFruitAsync(fruit);
+            result.ToString().ShouldStartWith("StatusCode");
         }
     }
 }
